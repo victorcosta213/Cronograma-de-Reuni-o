@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma EJC - Equipe da Gráfica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-light: #e0e7ff;
+            --secondary-color: #ec4899;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-color: #f3f4f6;
+            --white: #ffffff;
+            --border-color: #e5e7eb;
+            
+            --tag-weekend-bg: #dcfce7;
+            --tag-weekend-text: #166534;
+            --tag-weekday-bg: #fef9c3;
+            --tag-weekday-text: #854d0e;
+            
+            --tag-alert-bg: #fee2e2;
+            --tag-alert-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            color: var(--white);
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .dashboard-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px 40px;
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-card i {
+            font-size: 24px;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .info-card.events i {
+            color: var(--secondary-color);
+            background: #fce7f3;
+        }
+
+        .info-details h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-details p {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .info-details strong {
+            color: var(--primary-color);
+        }
+
+        .table-wrapper {
+            padding: 0 40px 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .month-col {
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: var(--primary-color);
+            width: 120px;
+        }
+
+        .meeting-col {
+            width: 150px;
+        }
+
+        .meeting-name {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-weekend { background-color: var(--tag-weekend-bg); color: var(--tag-weekend-text); }
+        .tag-weekday { background-color: var(--tag-weekday-bg); color: var(--tag-weekday-text); }
+        
+        .goals-list {
+            list-style: none;
+            margin-top: 5px;
+        }
+
+        .goals-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+        }
+
+        .goals-list li i {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .alert-box {
+            background-color: var(--tag-alert-bg);
+            color: var(--tag-alert-text);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .alert-box i {
+            margin-top: 2px;
+        }
+
+        .alert-box.regular {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .deadline-list {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .deadline-list li {
+            margin-bottom: 4px;
+        }
+        
+        .deadline-list li strong {
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 768px) {
+            .table-wrapper { padding: 0 20px 20px; }
+            header { padding: 30px 20px; }
+            .dashboard-info { padding: 20px; flex-direction: column; }
+            th { font-size: 14px; }
+            td { font-size: 14px; display: block; width: 100%; border-bottom: none; padding: 10px 16px; }
+            tr { border-bottom: 2px solid var(--border-color); display: block; padding-bottom: 10px; }
+            .month-col { padding-top: 20px; font-size: 20px; }
+            th { display: none; } /* Hide headers on mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-calendar-days"></i> Cronograma de Reuniões</h1>
+            <p>Equipe da Gráfica - Preparação EJC</p>
+        </header>
+
+        <div class="dashboard-info">
+            <div class="info-card">
+                <i class="fa-solid fa-bullseye"></i>
+                <div class="info-details">
+                    <h3>Missão da Equipe</h3>
+                    <p>Produzir todos os materiais impressos, álbuns, crachás e identidades visuais do encontro.</p>
+                </div>
+            </div>
+            <div class="info-card events">
+                <i class="fa-solid fa-star"></i>
+                <div class="info-details">
+                    <h3>Datas Importantes</h3>
+                    <p>Feijo Bingo: <strong>05/07</strong> <br> Dias do EJC: <strong>09, 10 e 11 de Outubro</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mês</th>
+                        <th>Reunião</th>
+                        <th>Metas da Reunião (Fazer)</th>
+                        <th>Prazos e Taxas (Avisos)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JUNHO -->
+                    <tr>
+                        <td class="month-col" rowspan="2">Junho</td>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 1</span>
+                            <span class="tag tag-weekend">Fim de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Votação e escolha do Santo Papa da Gráfica.</li>
+                                <li><i class="fa-solid fa-check"></i> Arte do Álbum.</li>
+                                <li><i class="fa-solid fa-check"></i> Lembrancinhas para a Inscrição (Ideias).</li>
+                                <li><i class="fa-solid fa-check"></i> Arte para o Cracha.</li>
+                                <li><i class="fa-solid fa-check"></i> Arte para o Livro de canto.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <div>
+                                    <strong>Taxa da Gráfica:</strong> R$ 20,00 (maio + junho) até o dia 15/06.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 2</span>
+                            <span class="tag tag-weekday">Dia de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Começar a criação do Álbum.</li>
+                                <li><i class="fa-solid fa-check"></i> Começar a criação do livro de Canto.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="deadline-list">
+                                <li><strong>Prazo:</strong> Escolha do Papa até 20/06.</li>
+                                <li><strong>Prazo:</strong> Taxa do Bingo (R$ 20,00) até 28/06.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- JULHO -->
+                    <tr>
+                        <td class="month-col" rowspan="2">Julho</td>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 3</span>
+                            <span class="tag tag-weekend">Fim de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Produção das Lembrancinhas para a Inscrição.</li>
+                                <li><i class="fa-solid fa-check"></i> Continuar a criação do Álbum.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box regular">
+                                <i class="fa-solid fa-bell"></i>
+                                <div>
+                                    <strong>Aviso:</strong> Feijo Bingo acontece dia 05/07.
+                                </div>
+                            </div>
+                            <ul class="deadline-list">
+                                <li><strong>Prazo:</strong> Taxa da Gráfica (R$ 10,00) até 15/07.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 4</span>
+                            <span class="tag tag-weekday">Dia de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i>Continuar a criação dos livro de Canto.</li>
+                                 <li><i class="fa-solid fa-check"></i>Terminar Lembrancinhas para a Inscrição.</li>
+                                <li><i class="fa-solid fa-check"></i>Organizar o formulario de inscrição.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="deadline-list">
+                                <li><strong>Prazo:</strong> Taxa de Inscrição (R$ 20,00) até 30/07.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- AGOSTO -->
+                    <tr>
+                        <td class="month-col" rowspan="2">Agosto</td>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 5</span>
+                            <span class="tag tag-weekend">Fim de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Terminar o Livro de Canto.</li>
+                                <li><i class="fa-solid fa-check"></i> Fichas para os pais adotivos.</li>
+                                <li><i class="fa-solid fa-check"></i> Começar a organizar o quadrante.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <div>
+                                    <strong>Taxa da Gráfica:</strong> R$ 10,00 até o dia 15/08.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 6</span>
+                            <span class="tag tag-weekday">Dia de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Começar a criação dos crachas.</li>
+                                <li><i class="fa-solid fa-check"></i> Terminar de organizar o quadrante.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="deadline-list">
+                                <li><strong>Prazo:</strong> Evento Aberto e Fechado (R$ 10,00) até 16/08.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- SETEMBRO -->
+                    <tr>
+                        <td class="month-col" rowspan="2">Setembro</td>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 7</span>
+                            <span class="tag tag-weekend">Fim de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Terminar a criação dos crachas.</li>
+                                <li><i class="fa-solid fa-check"></i> Ajuste de demanda atrasada.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <div>
+                                    <strong>Taxa da Gráfica:</strong> R$ 10,00 até o dia 15/09.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 8</span>
+                            <span class="tag tag-weekday">Dia de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Momento Espiritual.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="deadline-list">
+                                <li>Organização interna da equipe.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <!-- OUTUBRO -->
+                    <tr>
+                        <td class="month-col" rowspan="2">Outubro</td>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 9</span>
+                            <span class="tag tag-weekend">Fim de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Finalização da primeira parte do Quadrante (pré-encontro).</li>
+                                <li><i class="fa-solid fa-check"></i> Revisão de todo material impresso.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <div>
+                                    <strong>Taxa da Gráfica:</strong> Pagamento até o dia 05/10.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="meeting-col">
+                            <span class="meeting-name">Reunião 10</span>
+                            <span class="tag tag-weekday">Dia de Semana</span>
+                        </td>
+                        <td>
+                            <ul class="goals-list">
+                                <li><i class="fa-solid fa-check"></i> Preparação dos materiais para a Lembrancinha do Encontrista (que será feita no encontro).</li>
+                                <li><i class="fa-solid fa-check"></i> Alinhamento da equipe para os dias de Encontro.</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="alert-box regular">
+                                <i class="fa-solid fa-calendar-star"></i>
+                                <div>
+                                    <strong>EJC:</strong> 09, 10 e 11 de Outubro.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
