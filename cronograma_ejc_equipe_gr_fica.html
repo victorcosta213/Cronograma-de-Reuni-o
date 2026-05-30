@@ -246,6 +246,166 @@
             color: var(--text-dark);
         }
 
+        .controls {
+            padding: 24px 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+        }
+
+        .edit-tip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            font-size: 14px;
+            flex: 1 1 320px;
+        }
+
+        .control-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            flex: 1 1 320px;
+            justify-content: flex-end;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--white);
+            background-color: var(--primary-color);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background-color: #4338ca;
+        }
+
+        .save-status {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .form-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(760px, 95vw);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--white);
+            border-radius: 18px;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18);
+            padding: 24px;
+            z-index: 100;
+        }
+
+        .form-panel.hidden {
+            display: none;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .form-header h2 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .panel-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        .panel-section label {
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .panel-section input,
+        .panel-section select,
+        .panel-section textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            background: #ffffff;
+            color: var(--text-dark);
+        }
+
+        .panel-section button {
+            width: fit-content;
+            background-color: var(--secondary-color);
+        }
+
+        .mini-btn {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e9d5ff;
+            color: #6d28d9;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            border: 1px solid #ddd6fe;
+        }
+
+        .editable {
+            outline: none;
+            min-width: 20px;
+            padding: 2px 4px;
+            border-radius: 6px;
+        }
+
+        .editable:focus {
+            background-color: #eef2ff;
+            box-shadow: inset 0 0 0 1px var(--primary-color);
+        }
+
+        .tag {
+            cursor: text;
+        }
+
+        .form-panel button#closeFormBtn {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        .form-panel button#closeFormBtn:hover {
+            background: #e2e8f0;
+        }
+
         @media (max-width: 768px) {
             .table-wrapper { padding: 0 20px 20px; }
             header { padding: 30px 20px; }
@@ -271,15 +431,27 @@
                 <i class="fa-solid fa-bullseye"></i>
                 <div class="info-details">
                     <h3>Missão da Equipe</h3>
-                    <p>Produzir todos os materiais impressos, álbuns, crachás e identidades visuais do encontro.</p>
+                    <p class="editable mission-text" contenteditable="true" data-field="mission">Produzir todos os materiais impressos, álbuns, crachás e identidades visuais do encontro.</p>
                 </div>
             </div>
             <div class="info-card events">
                 <i class="fa-solid fa-star"></i>
                 <div class="info-details">
                     <h3>Datas Importantes</h3>
-                    <p>Feijo Bingo: <strong>05/07</strong> <br> Dias do EJC: <strong>09, 10 e 11 de Outubro</strong></p>
+                    <p class="editable dates-text" contenteditable="true" data-field="dates">Feijo Bingo: <strong>05/07</strong> <br> Dias do EJC: <strong>09, 10 e 11 de Outubro</strong></p>
                 </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="edit-tip">
+                <i class="fa-solid fa-pen-to-square"></i> Clique em qualquer texto para editar. As alterações são salvas no navegador automaticamente.
+            </div>
+            <div class="control-buttons">
+                <button id="addMeetingBtn" type="button">Adicionar reunião</button>
+                <button id="addAlertBtn" type="button">Adicionar aviso</button>
+                <button id="resetBtn" type="button">Recarregar padrão</button>
+                <span id="saveStatus" class="save-status">Nenhuma alteração pendente.</span>
             </div>
         </div>
 
@@ -293,221 +465,310 @@
                         <th>Prazos e Taxas (Avisos)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- JUNHO -->
-                    <tr>
-                        <td class="month-col" rowspan="2">Junho</td>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 1</span>
-                            <span class="tag tag-weekend">Fim de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Votação e escolha do Santo Papa da Gráfica.</li>
-                                <li><i class="fa-solid fa-check"></i> Arte do Álbum.</li>
-                                <li><i class="fa-solid fa-check"></i> Lembrancinhas para a Inscrição (Ideias).</li>
-                                <li><i class="fa-solid fa-check"></i> Arte para o Cracha.</li>
-                                <li><i class="fa-solid fa-check"></i> Arte para o Livro de canto.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                <div>
-                                    <strong>Taxa da Gráfica:</strong> R$ 20,00 (maio + junho) até o dia 15/06.
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 2</span>
-                            <span class="tag tag-weekday">Dia de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Começar a criação do Álbum.</li>
-                                <li><i class="fa-solid fa-check"></i> Começar a criação do livro de Canto.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul class="deadline-list">
-                                <li><strong>Prazo:</strong> Escolha do Papa até 20/06.</li>
-                                <li><strong>Prazo:</strong> Taxa do Bingo (R$ 20,00) até 28/06.</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-                    <!-- JULHO -->
-                    <tr>
-                        <td class="month-col" rowspan="2">Julho</td>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 3</span>
-                            <span class="tag tag-weekend">Fim de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Produção das Lembrancinhas para a Inscrição.</li>
-                                <li><i class="fa-solid fa-check"></i> Continuar a criação do Álbum.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box regular">
-                                <i class="fa-solid fa-bell"></i>
-                                <div>
-                                    <strong>Aviso:</strong> Feijo Bingo acontece dia 05/07.
-                                </div>
-                            </div>
-                            <ul class="deadline-list">
-                                <li><strong>Prazo:</strong> Taxa da Gráfica (R$ 10,00) até 15/07.</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 4</span>
-                            <span class="tag tag-weekday">Dia de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i>Continuar a criação dos livro de Canto.</li>
-                                 <li><i class="fa-solid fa-check"></i>Terminar Lembrancinhas para a Inscrição.</li>
-                                <li><i class="fa-solid fa-check"></i>Organizar o formulario de inscrição.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul class="deadline-list">
-                                <li><strong>Prazo:</strong> Taxa de Inscrição (R$ 20,00) até 30/07.</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-                    <!-- AGOSTO -->
-                    <tr>
-                        <td class="month-col" rowspan="2">Agosto</td>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 5</span>
-                            <span class="tag tag-weekend">Fim de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Terminar o Livro de Canto.</li>
-                                <li><i class="fa-solid fa-check"></i> Fichas para os pais adotivos.</li>
-                                <li><i class="fa-solid fa-check"></i> Começar a organizar o quadrante.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                <div>
-                                    <strong>Taxa da Gráfica:</strong> R$ 10,00 até o dia 15/08.
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 6</span>
-                            <span class="tag tag-weekday">Dia de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Começar a criação dos crachas.</li>
-                                <li><i class="fa-solid fa-check"></i> Terminar de organizar o quadrante.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul class="deadline-list">
-                                <li><strong>Prazo:</strong> Evento Aberto e Fechado (R$ 10,00) até 16/08.</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-                    <!-- SETEMBRO -->
-                    <tr>
-                        <td class="month-col" rowspan="2">Setembro</td>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 7</span>
-                            <span class="tag tag-weekend">Fim de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Terminar a criação dos crachas.</li>
-                                <li><i class="fa-solid fa-check"></i> Ajuste de demanda atrasada.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                <div>
-                                    <strong>Taxa da Gráfica:</strong> R$ 10,00 até o dia 15/09.
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 8</span>
-                            <span class="tag tag-weekday">Dia de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Momento Espiritual.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul class="deadline-list">
-                                <li>Organização interna da equipe.</li>
-                            </ul>
-                        </td>
-                    </tr>
-
-                    <!-- OUTUBRO -->
-                    <tr>
-                        <td class="month-col" rowspan="2">Outubro</td>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 9</span>
-                            <span class="tag tag-weekend">Fim de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Finalização da primeira parte do Quadrante (pré-encontro).</li>
-                                <li><i class="fa-solid fa-check"></i> Revisão de todo material impresso.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                <div>
-                                    <strong>Taxa da Gráfica:</strong> Pagamento até o dia 05/10.
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="meeting-col">
-                            <span class="meeting-name">Reunião 10</span>
-                            <span class="tag tag-weekday">Dia de Semana</span>
-                        </td>
-                        <td>
-                            <ul class="goals-list">
-                                <li><i class="fa-solid fa-check"></i> Preparação dos materiais para a Lembrancinha do Encontrista (que será feita no encontro).</li>
-                                <li><i class="fa-solid fa-check"></i> Alinhamento da equipe para os dias de Encontro.</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="alert-box regular">
-                                <i class="fa-solid fa-calendar-star"></i>
-                                <div>
-                                    <strong>EJC:</strong> 09, 10 e 11 de Outubro.
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="scheduleBody">
+                    <!-- Este conteúdo será renderizado dinamicamente pelo JavaScript -->
                 </tbody>
             </table>
         </div>
     </div>
+
+        <div class="form-panel hidden" id="formPanel">
+            <div class="form-header">
+                <div>
+                    <h2 id="formTitle">Adicionar nova reunião</h2>
+                    <p class="form-subtitle">Use este formulário para criar eventos novos ou avisos.</p>
+                </div>
+                <button type="button" id="closeFormBtn" aria-label="Fechar formulário"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="meetingForm" class="panel-section">
+                <label for="meetingMonth">Mês</label>
+                <input id="meetingMonth" type="text" placeholder="Ex: Novembro" required>
+
+                <label for="meetingName">Nome da reunião</label>
+                <input id="meetingName" type="text" placeholder="Ex: Reunião 11" required>
+
+                <label for="meetingType">Tipo de dia</label>
+                <select id="meetingType">
+                    <option>Fim de Semana</option>
+                    <option>Dia de Semana</option>
+                </select>
+
+                <label for="meetingGoals">Metas (uma por linha)</label>
+                <textarea id="meetingGoals" rows="4" placeholder="Ex: Produzir arte do crachá"></textarea>
+
+                <label for="meetingAlerts">Avisos / prazos (uma por linha)</label>
+                <textarea id="meetingAlerts" rows="4" placeholder="Ex: Taxa de inscrição até 15/11"></textarea>
+
+                <button type="submit">Salvar reunião</button>
+            </form>
+
+            <form id="alertForm" class="panel-section hidden">
+                <label for="alertMeetingSelect">Reunião</label>
+                <select id="alertMeetingSelect"></select>
+
+                <label for="alertText">Texto do aviso</label>
+                <textarea id="alertText" rows="4" placeholder="Ex: Levar material impresso para reunião" required></textarea>
+
+                <button type="submit">Adicionar aviso</button>
+            </form>
+        </div>
+
+    <script>
+        const storageKey = 'cronogramaEjcSchedule';
+        const defaultData = {
+            mission: 'Produzir todos os materiais impressos, álbuns, crachás e identidades visuais do encontro.',
+            dates: 'Feijo Bingo: 05/07 | Dias do EJC: 09, 10 e 11 de Outubro',
+            meetings: [
+                { month: 'Junho', meeting: 'Reunião 1', dayType: 'Fim de Semana', goals: ['Votação e escolha do Santo Papa da Gráfica.', 'Arte do Álbum.', 'Lembrancinhas para a Inscrição (Ideias).', 'Arte para o Cracha.', 'Arte para o Livro de canto.'], alerts: [{ text: 'Taxa da Gráfica: R$ 20,00 (maio + junho) até o dia 15/06.', type: 'warning' }] },
+                { month: 'Junho', meeting: 'Reunião 2', dayType: 'Dia de Semana', goals: ['Começar a criação do Álbum.', 'Começar a criação do livro de Canto.'], alerts: [{ text: 'Prazo: Escolha do Papa até 20/06.', type: 'info' }, { text: 'Prazo: Taxa do Bingo (R$ 20,00) até 28/06.', type: 'info' }] },
+                { month: 'Julho', meeting: 'Reunião 3', dayType: 'Fim de Semana', goals: ['Produção das Lembrancinhas para a Inscrição.', 'Continuar a criação do Álbum.'], alerts: [{ text: 'Aviso: Feijo Bingo acontece dia 05/07.', type: 'regular' }, { text: 'Prazo: Taxa da Gráfica (R$ 10,00) até 15/07.', type: 'info' }] },
+                { month: 'Julho', meeting: 'Reunião 4', dayType: 'Dia de Semana', goals: ['Continuar a criação dos livro de Canto.', 'Terminar Lembrancinhas para a Inscrição.', 'Organizar o formulario de inscrição.'], alerts: [{ text: 'Prazo: Taxa de Inscrição (R$ 20,00) até 30/07.', type: 'info' }] },
+                { month: 'Agosto', meeting: 'Reunião 5', dayType: 'Fim de Semana', goals: ['Terminar o Livro de Canto.', 'Fichas para os pais adotivos.', 'Começar a organizar o quadrante.'], alerts: [{ text: 'Taxa da Gráfica: R$ 10,00 até o dia 15/08.', type: 'warning' }] },
+                { month: 'Agosto', meeting: 'Reunião 6', dayType: 'Dia de Semana', goals: ['Começar a criação dos crachas.', 'Terminar de organizar o quadrante.'], alerts: [{ text: 'Prazo: Evento Aberto e Fechado (R$ 10,00) até 16/08.', type: 'info' }] },
+                { month: 'Setembro', meeting: 'Reunião 7', dayType: 'Fim de Semana', goals: ['Terminar a criação dos crachas.', 'Ajuste de demanda atrasada.'], alerts: [{ text: 'Taxa da Gráfica: R$ 10,00 até o dia 15/09.', type: 'warning' }] },
+                { month: 'Setembro', meeting: 'Reunião 8', dayType: 'Dia de Semana', goals: ['Momento Espiritual.'], alerts: [{ text: 'Organização interna da equipe.', type: 'info' }] },
+                { month: 'Outubro', meeting: 'Reunião 9', dayType: 'Fim de Semana', goals: ['Finalização da primeira parte do Quadrante (pré-encontro).', 'Revisão de todo material impresso.'], alerts: [{ text: 'Taxa da Gráfica: Pagamento até o dia 05/10.', type: 'warning' }] },
+                { month: 'Outubro', meeting: 'Reunião 10', dayType: 'Dia de Semana', goals: ['Preparação dos materiais para a Lembrancinha do Encontrista (que será feita no encontro).', 'Alinhamento da equipe para os dias de Encontro.'], alerts: [{ text: 'EJC: 09, 10 e 11 de Outubro.', type: 'regular' }] }
+            ]
+        };
+
+        let scheduleData = loadData();
+
+        function loadData() {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch (err) {
+                    console.warn('Dados inválidos no localStorage, usando padrão.', err);
+                }
+            }
+            localStorage.removeItem(storageKey);
+            return JSON.parse(JSON.stringify(defaultData));
+        }
+
+        function saveData(message = 'Salvo localmente.') {
+            localStorage.setItem(storageKey, JSON.stringify(scheduleData));
+            document.getElementById('saveStatus').textContent = message;
+        }
+
+        function resetToDefault() {
+            if (!confirm('Restaurar o cronograma para o padrão? Isso apagará alterações salvas localmente.')) {
+                return;
+            }
+            localStorage.removeItem(storageKey);
+            scheduleData = JSON.parse(JSON.stringify(defaultData));
+            render();
+            saveData('Padrão restaurado.');
+        }
+
+        function render() {
+            renderOverview();
+            renderTable();
+            populateAlertMeetingOptions();
+        }
+
+        function renderOverview() {
+            document.querySelector('.mission-text').textContent = scheduleData.mission;
+            document.querySelector('.dates-text').innerHTML = scheduleData.dates.replace(/\|/g, '<br>');
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+
+            scheduleData.meetings.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.dataset.index = index;
+
+                const monthTd = document.createElement('td');
+                monthTd.className = 'month-col';
+                monthTd.innerHTML = `<span class="editable" contenteditable="true" data-field="month">${item.month}</span>`;
+                row.appendChild(monthTd);
+
+                const meetingTd = document.createElement('td');
+                meetingTd.className = 'meeting-col';
+                meetingTd.innerHTML = `
+                    <span class="meeting-name editable" contenteditable="true" data-field="meeting">${item.meeting}</span>
+                    <span class="tag ${item.dayType === 'Fim de Semana' ? 'tag-weekend' : 'tag-weekday'} editable" contenteditable="true" data-field="dayType">${item.dayType}</span>
+                `;
+                row.appendChild(meetingTd);
+
+                const goalsTd = document.createElement('td');
+                const goalsHtml = item.goals.map((goal, i) => `<li contenteditable="true" data-field="goals" data-item="${i}">${goal}</li>`).join('');
+                goalsTd.innerHTML = `<ul class="goals-list">${goalsHtml}</ul><button class="mini-btn" data-action="addGoal" data-index="${index}" type="button">+ meta</button>`;
+                row.appendChild(goalsTd);
+
+                const alertTd = document.createElement('td');
+                const alertsHtml = item.alerts.map((alert, i) => `
+                    <div class="alert-box ${alert.type === 'regular' ? 'regular' : ''}">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <div contenteditable="true" data-field="alerts" data-item="${i}">${alert.text}</div>
+                    </div>
+                `).join('');
+                alertTd.innerHTML = `${alertsHtml}<button class="mini-btn" data-action="addAlert" data-index="${index}" type="button">+ aviso</button>`;
+                row.appendChild(alertTd);
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateAlertMeetingOptions() {
+            const select = document.getElementById('alertMeetingSelect');
+            select.innerHTML = '';
+            scheduleData.meetings.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${item.month} - ${item.meeting}`;
+                select.appendChild(option);
+            });
+        }
+
+        function handleContentChange(target) {
+            const row = target.closest('tr');
+            const itemIndex = row?.dataset.index;
+            const field = target.dataset.field;
+            if (!field) {
+                return;
+            }
+
+            if (field === 'mission') {
+                scheduleData.mission = target.textContent.trim();
+                saveData();
+                return;
+            }
+
+            if (field === 'dates') {
+                scheduleData.dates = target.innerHTML.replace(/<br>/g, ' | ').trim();
+                saveData();
+                return;
+            }
+
+            if (!itemIndex) return;
+            const meeting = scheduleData.meetings[Number(itemIndex)];
+
+            if (field === 'month' || field === 'meeting' || field === 'dayType') {
+                meeting[field] = target.textContent.trim();
+                saveData();
+                render();
+                return;
+            }
+
+            if (field === 'goals') {
+                const goalIndex = Number(target.dataset.item);
+                const value = target.textContent.trim();
+                if (value === '') {
+                    meeting.goals.splice(goalIndex, 1);
+                } else {
+                    meeting.goals[goalIndex] = value;
+                }
+                saveData();
+                render();
+                return;
+            }
+
+            if (field === 'alerts') {
+                const alertIndex = Number(target.dataset.item);
+                const value = target.textContent.trim();
+                if (value === '') {
+                    meeting.alerts.splice(alertIndex, 1);
+                } else {
+                    meeting.alerts[alertIndex].text = value;
+                }
+                saveData();
+                render();
+            }
+        }
+
+        function addGoal(index) {
+            scheduleData.meetings[index].goals.push('Nova meta...');
+            saveData('Meta adicionada. Você pode editar o texto.');
+            render();
+        }
+
+        function addAlert(index) {
+            scheduleData.meetings[index].alerts.push({ text: 'Novo aviso...', type: 'info' });
+            saveData('Aviso adicionado. Você pode editar o texto.');
+            render();
+        }
+
+        function openForm(type) {
+            const formPanel = document.getElementById('formPanel');
+            const meetingForm = document.getElementById('meetingForm');
+            const alertForm = document.getElementById('alertForm');
+            const title = document.getElementById('formTitle');
+
+            formPanel.classList.remove('hidden');
+            if (type === 'meeting') {
+                meetingForm.classList.remove('hidden');
+                alertForm.classList.add('hidden');
+                title.textContent = 'Adicionar nova reunião';
+            } else {
+                meetingForm.classList.add('hidden');
+                alertForm.classList.remove('hidden');
+                title.textContent = 'Adicionar novo aviso';
+            }
+        }
+
+        function closeForm() {
+            document.getElementById('formPanel').classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+            document.getElementById('addMeetingBtn').addEventListener('click', () => openForm('meeting'));
+            document.getElementById('addAlertBtn').addEventListener('click', () => {
+                populateAlertMeetingOptions();
+                openForm('alert');
+            });
+            document.getElementById('closeFormBtn').addEventListener('click', closeForm);
+            document.getElementById('resetBtn').addEventListener('click', resetToDefault);
+
+            document.getElementById('meetingForm').addEventListener('submit', event => {
+                event.preventDefault();
+                const month = document.getElementById('meetingMonth').value.trim();
+                const meeting = document.getElementById('meetingName').value.trim();
+                const dayType = document.getElementById('meetingType').value;
+                const goals = document.getElementById('meetingGoals').value.split('\n').map(line => line.trim()).filter(Boolean);
+                const alerts = document.getElementById('meetingAlerts').value.split('\n').map(line => line.trim()).filter(Boolean).map(text => ({ text, type: 'info' }));
+                if (!month || !meeting) return;
+                scheduleData.meetings.push({ month, meeting, dayType, goals, alerts });
+                saveData('Reunião adicionada.');
+                render();
+                closeForm();
+                event.target.reset();
+            });
+
+            document.getElementById('alertForm').addEventListener('submit', event => {
+                event.preventDefault();
+                const index = Number(document.getElementById('alertMeetingSelect').value);
+                const text = document.getElementById('alertText').value.trim();
+                if (Number.isNaN(index) || !text) return;
+                scheduleData.meetings[index].alerts.push({ text, type: 'info' });
+                saveData('Aviso adicionado.');
+                render();
+                closeForm();
+                event.target.reset();
+            });
+
+            document.getElementById('scheduleBody').addEventListener('click', event => {
+                const target = event.target;
+                const action = target.dataset.action;
+                if (!action) return;
+                const index = Number(target.dataset.index);
+                if (action === 'addGoal') addGoal(index);
+                if (action === 'addAlert') addAlert(index);
+            });
+
+            document.getElementById('scheduleBody').addEventListener('blur', event => {
+                handleContentChange(event.target);
+            }, true);
+
+            document.querySelector('.mission-text').addEventListener('blur', event => handleContentChange(event.target));
+            document.querySelector('.dates-text').addEventListener('blur', event => handleContentChange(event.target));
+        });
+    </script>
 
 </body>
 </html>
